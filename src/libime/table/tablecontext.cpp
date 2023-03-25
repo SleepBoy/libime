@@ -256,9 +256,9 @@ public:
 
         // Check by regex.
         return dict_.d_func()->autoSelectRegex_ &&
-               boost::regex_match(graph_.data(),
+               std::regex_match(graph_.data(),
                                   *dict_.d_func()->autoSelectRegex_,
-                                  boost::regex_constants::match_default);
+                                  std::regex_constants::match_default);
     }
 
     bool checkNoMatchAutoSelect() const {
@@ -273,9 +273,9 @@ public:
 
         // Check by regex.
         return dict_.d_func()->noMatchAutoSelectRegex_ &&
-               boost::regex_match(graph_.data(),
+               std::regex_match(graph_.data(),
                                   *dict_.d_func()->noMatchAutoSelectRegex_,
-                                  boost::regex_constants::match_default);
+                                  std::regex_constants::match_default);
     }
 
     TableBasedDictionary &dict_;
