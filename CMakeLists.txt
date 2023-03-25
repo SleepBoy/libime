@@ -2,6 +2,48 @@ cmake_minimum_required(VERSION 3.7)
 project(libime VERSION 1.0.17)
 set(LibIME_VERSION ${PROJECT_VERSION})
 
+if(ANDROID)
+	set(OS_TYPE "android")
+	set(ARCH_TYPE "${ANDROID_ABI}")
+
+	add_definitions(-D__ANDROID__)
+
+	message(STATUS "ANDROID_PLATFORM: [${ANDROID_PLATFORM}]")
+	message(STATUS "ANDROID_STL: [${ANDROID_STL}]")
+	message(STATUS "ANDROID_ABI: [${ANDROID_ABI}]")
+	message(STATUS "CMAKE_TOOLCHAIN_FILE: [${CMAKE_TOOLCHAIN_FILE}]")
+	message(STATUS "CMAKE_CXX_FLAGS: [${CMAKE_CXX_FLAGS}]")
+elseif(APPLE)
+	set(OS_TYPE "darwin")
+	set(ARCH_TYPE "${CMAKE_SYSTEM_PROCESSOR}")
+
+	add_definitions(-D__DARWIN__)
+elseif(WIN32)
+	set(OS_TYPE "win32")
+	set(ARCH_TYPE "${CMAKE_SYSTEM_PROCESSOR}")
+
+	add_definitions(-D__WIN32__)
+
+	if ("${ARCH_TYPE}" STREQUAL "AMD64")
+		set(ARCH_TYPE "x86_64")
+	endif()
+
+	if (("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win32") OR (( NOT CMAKE_GENERATOR_PLATFORM) AND ("${CMAKE_VS_PLATFORM_NAME_DEFAULT}" STREQUAL "Win32")))
+		set(ARCH_TYPE "x86")
+	endif()
+
+	if (("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64") OR ((NOT CMAKE_GENERATOR_PLATFORM) AND ("${CMAKE_VS_PLATFORM_NAME_DEFAULT}" STREQUAL "x64")))
+		set(ARCH_TYPE "x86_64")
+	endif()
+elseif(UNIX)
+	set(OS_TYPE "linux")
+	set(ARCH_TYPE "${CMAKE_SYSTEM_PROCESSOR}")
+
+	add_definitions(-D__LINUX__)
+else()
+	message(FATAL_ERROR "Unknown OS type")
+endif()
+
 find_package(ECM 1.0 REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -27,10 +69,10 @@ include(ECMGeneratePkgConfigFile)
 include(ECMUninstallTarget)
 include(CheckLibraryExists)
 
-find_package(Fcitx5Utils REQUIRED)
-include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cmake")
+# find_package(Fcitx5Utils REQUIRED)
+# include("${FCITX_INSTALL_CMAKECONFIG_DIR}/Fcitx5Utils/Fcitx5CompilerSettings.cmake")
 
-find_package(Boost 1.61 REQUIRED COMPONENTS iostreams filesystem regex)
+# find_package(Boost 1.61 REQUIRED COMPONENTS iostreams filesystem regex)
 set(LIBIME_INSTALL_PKGDATADIR "${CMAKE_INSTALL_FULL_DATADIR}/libime")
 set(LIBIME_INSTALL_LIBDATADIR "${CMAKE_INSTALL_FULL_LIBDIR}/libime")
 
@@ -52,8 +94,8 @@ if(ENABLE_TEST)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(tools)
-add_subdirectory(data)
+# add_subdirectory(tools)
+# add_subdirectory(data)
 
 if (ENABLE_DOC)
   find_package(Doxygen REQUIRED)

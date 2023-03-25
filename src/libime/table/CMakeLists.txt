@@ -22,6 +22,10 @@ ecm_setup_version(PROJECT
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LibIMETableConfigVersion.cmake")
 set(IMETable_SOVERSION 0)
 
+link_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../../libime-cpis/libs/${OS_TYPE}/${ARCH_TYPE}
+)
+
 add_library(IMETable SHARED ${LIBIME_TABLE_SRCS})
 set_target_properties(IMETable
                       PROPERTIES VERSION ${IMETable_VERSION}
@@ -34,7 +38,7 @@ target_include_directories(IMETable PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}/LibIME>)
 
-target_link_libraries(IMETable PUBLIC Fcitx5::Utils Boost::boost LibIME::Core PRIVATE Boost::regex)
+target_link_libraries(IMETable PUBLIC Fcitx5Utils LibIME::Core)
 
 install(TARGETS IMETable EXPORT LibIMETableTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 install(FILES ${LIBIME_TABLE_HDRS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/LibIME/libime/table")

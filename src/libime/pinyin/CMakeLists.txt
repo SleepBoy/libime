@@ -28,6 +28,10 @@ ecm_setup_version(PROJECT
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LibIMEPinyinConfigVersion.cmake")
 set(IMEPinyin_SOVERSION 0)
 
+link_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../../libime-cpis/libs/${OS_TYPE}/${ARCH_TYPE}
+)
+
 add_library(IMEPinyin SHARED ${LIBIME_PINYIN_SRCS})
 set_target_properties(IMEPinyin PROPERTIES
                       VERSION ${IMEPinyin_VERSION}
@@ -39,7 +43,7 @@ target_include_directories(IMEPinyin PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}/LibIME>)
 
-target_link_libraries(IMEPinyin PUBLIC Fcitx5::Utils Boost::boost LibIME::Core)
+target_link_libraries(IMEPinyin PUBLIC Fcitx5Utils LibIME::Core)
 
 install(TARGETS IMEPinyin EXPORT LibIMEPinyinTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 install(FILES ${LIBIME_PINYIN_HDRS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/LibIME/libime/pinyin")

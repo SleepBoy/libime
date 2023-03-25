@@ -12,7 +12,7 @@ endforeach()
 add_library(kenlm STATIC ${KENLM_SRCS})
 target_include_directories(kenlm PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/kenlm>)
 target_compile_definitions(kenlm PUBLIC -DKENLM_MAX_ORDER=3 PRIVATE -DNDEBUG)
-target_link_libraries(kenlm PUBLIC Boost::boost)
+target_link_libraries(kenlm PUBLIC)
 set_target_properties(kenlm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(UNIX)
@@ -66,6 +66,10 @@ ecm_setup_version(PROJECT
 # the cmake if will
 set(IMECore_SOVERSION 0)
 
+link_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../../libime-cpis/libs/${OS_TYPE}/${ARCH_TYPE}
+)
+
 add_library(IMECore SHARED ${LIBIME_SRCS})
 set_target_properties(IMECore
                       PROPERTIES VERSION ${IMECore_VERSION}
@@ -77,7 +81,7 @@ target_include_directories(IMECore PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}/LibIME>)
 
-target_link_libraries(IMECore PUBLIC Fcitx5::Utils Boost::boost PRIVATE kenlm)
+target_link_libraries(IMECore PUBLIC Fcitx5Utils PRIVATE kenlm)
 
 install(TARGETS IMECore EXPORT LibIMECoreTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 install(FILES ${LIBIME_HDRS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/LibIME/libime/core")
