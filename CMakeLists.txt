@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.7)
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+
 project(libime VERSION 1.0.17)
 set(LibIME_VERSION ${PROJECT_VERSION})
 
